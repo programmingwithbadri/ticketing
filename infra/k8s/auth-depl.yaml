@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment # Deployment object which will create the pods for us. Even restarts if pod stops
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector: # select the pod we need to deploy based on label in the template
+    matchLabels:
+      app: auth
+  template: # Pod template
+    metadata:
+      labels: 
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: programmingwithbadri/ticketing-auth
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec: # default type: clusterIP
+  selector: # select the pod we need to deploy based on label in the template
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 3000 # port number of the current service(cluster IP service).
+      targetPort: 3000 # port number of our pod(express server port)
