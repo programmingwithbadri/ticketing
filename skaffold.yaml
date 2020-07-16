@@ -1,0 +1,19 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy: # all the config files we want to load in cluster
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: programmingwithbadri/ticketing-auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          # whenever the file in this pattern changes, scaffold will update the pod
+          - src: 'src/**/*.ts' # if not match, scaffold will rebuild the docker image
+            dest: .
