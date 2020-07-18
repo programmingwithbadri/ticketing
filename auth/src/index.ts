@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors'; // handles the promise of async method if we throw any error in it
 import { json } from 'body-parser';
 
 import { currentUserRouter } from './routes/current-user';
@@ -18,7 +19,7 @@ app.use(signupRouter);
 
 // If anything other than above route called,
 // Throw not found error 
-app.all('*', (req, res) => {
+app.all('*', async (req, res) => {
   throw new NotFoundError();
 });
 
