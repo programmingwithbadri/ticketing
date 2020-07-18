@@ -17,7 +17,7 @@ router.post('/api/users/signup',
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(400).send(errors);
+      throw new Error('Invalid Email/Password');
     }
     res.send('Hi there!');
   });
