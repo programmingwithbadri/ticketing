@@ -40,7 +40,7 @@ router.post('/api/users/signup',
     const jwtToken = jwt.sign({
       id: user.id,
       email: user.email
-    }, "SECRET") // SecretKey has to be added in K8s 
+    }, process.env.JWT_KEY!) // Created secret in k8s, kubectl create secret generic jwt-secret --from-literal=JWT_KEY=SECRET
 
     // Store JWT token in session object
     req.session = {
