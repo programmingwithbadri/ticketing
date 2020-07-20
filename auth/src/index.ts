@@ -2,7 +2,7 @@ import express from 'express';
 import 'express-async-errors'; // handles the promise of async method if we throw any error in it
 import { json } from 'body-parser';
 import mongoose from 'mongoose';
-import cookieSession from "cookie-session";
+import cookieSession from 'cookie-session';
 
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
@@ -17,8 +17,8 @@ app.set('trust proxy', true); // Setting true so that it will trust req from k8s
 app.use(json());
 app.use(cookieSession({
   signed: false,
-  secure: true, // HTTPS
-}))
+  secure: false // Will change to true later 
+}));
 
 app.use(currentUserRouter);
 app.use(signinRouter);

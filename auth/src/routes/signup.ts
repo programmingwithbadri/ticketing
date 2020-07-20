@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
+import jwt from 'jsonwebtoken';
+
 import { User } from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
 
@@ -33,6 +35,18 @@ router.post('/api/users/signup',
 
     const user = User.build({ email, password });
     await user.save();
+
+    // Generate JWT
+    const jwtToken = jwt.sign({
+      id: user.id,
+      email: user.email
+    }, "SECRET") // SecretKey has to be added in K8s 
+
+    // Store JWT token in session object
+    req.session = {
+      jwt: jwtToken
+    };
+
     res.status(201).send(user);
   });
 
