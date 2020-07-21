@@ -3,6 +3,15 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../app';
 
+// Add the signin method to global
+declare global {
+  namespace NodeJS {
+    interface Global {
+      signin(): Promise<string[]>;
+    }
+  }
+}
+
 let mongo: any;
 
 // Before any test is started
@@ -32,3 +41,21 @@ afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
 });
+
+// We can instead create helper method instead of global function
+global.signin = async () => {
+  const email = 'test@test.com';
+  const password = 'password';
+
+  const response = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email,
+      password
+    })
+    .expect(201);
+
+  const cookie = response.get('Set-Cookie');
+
+  return cookie;
+};
