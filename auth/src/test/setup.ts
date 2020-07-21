@@ -7,6 +7,7 @@ let mongo: any;
 
 // Before any test is started
 beforeAll(async () => {
+  process.env.JWT_KEY = "testJwtKey";
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
 
