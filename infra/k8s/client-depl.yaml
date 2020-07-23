@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment # Deployment object which will create the pods for us. Even restarts if pod stops
+metadata:
+  name: client-depl
+spec:
+  replicas: 1
+  selector: # select the pod we need to deploy based on label in the template
+    matchLabels:
+      app: client
+  template: # Pod template
+    metadata:
+      labels: 
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: programmingwithbadri/ticketing-client
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec: # default type: clusterIP
+  selector: # select the pod we need to deploy based on label in the template
+    app: client
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000 # port number of the current service(cluster IP service).
+      targetPort: 3000 # port number of our pod(express server port)
