@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment # Deployment object which will create the pods for us. Even restarts if pod stops
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
   selector: # select the pod we need to deploy based on label in the template
     matchLabels:
-      app: auth
+      app: tickets
   template: # Pod template
     metadata:
       labels: 
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: programmingwithbadri/ticketing-auth
+        - name: tickets
+          image: programmingwithbadri/ticketing-tickets-service
           env:
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017'
+              value: 'mongodb://tickets-mongo-srv:27017'
             - name: JWT_KEY
               valueFrom: 
                 secretKeyRef:
@@ -28,12 +28,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec: # default type: clusterIP
   selector: # select the pod we need to deploy based on label in the template
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000 # port number of the current service(cluster IP service).
       targetPort: 3000 # port number of our pod(express server port)
