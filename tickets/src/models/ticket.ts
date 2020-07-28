@@ -42,6 +42,7 @@ const ticketSchema = new mongoose.Schema(
             transform(doc, ret) {
                 ret.id = ret._id; // Return id instead of _id in response
                 delete ret._id; // Remove  _id
+                delete ret.__v; // Remove  _v
             },
         },
     }
