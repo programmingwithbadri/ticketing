@@ -10,6 +10,12 @@ const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
 stan.on('connect', () => {
     console.log('Listener connected to NATS');
 
+    // Exit process, if close event emitted
+    stan.on('close', () => {
+        console.log('NATS connection closed!');
+        process.exit();
+    });
+
     const options = stan
         .subscriptionOptions()
         .setManualAckMode(true);
@@ -30,3 +36,7 @@ stan.on('connect', () => {
         msg.ack();
     });
 });
+
+// Close the connection when the terminal is closed/ Or connection issue
+process.on('SIGINT', () => stan.close()); //Interrupt connection
+process.on('SIGTERM', () => stan.close()); // Terminate connection
