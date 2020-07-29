@@ -18,12 +18,14 @@ stan.on('connect', () => {
 
     const options = stan
         .subscriptionOptions()
-        .setManualAckMode(true);
+        .setManualAckMode(true)
+        .setDeliverAllAvailable()
+        .setDurableName('order-service'); // Used to deliver the missed events after restart/crash
 
     // If queue group added, nats-streaming-server will subscribe to only one client
     // This will help us to avoid having duplicate copies in DB etc
     // when multiple clients are listening for the event.
-    const subscription = stan.subscribe('ticket:created', 'order-queue-group');
+    const subscription = stan.subscribe('ticket:created', 'order-queue-group', options);
 
     subscription.on('message', (msg: Message) => {
         const data = msg.getData();
