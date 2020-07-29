@@ -1,5 +1,6 @@
 import nats, { Message } from 'node-nats-streaming';
 import { randomBytes } from 'crypto';
+import { TicketCreatedListener } from './events/ticket-created-listener';
 
 console.clear();
 
@@ -16,27 +17,8 @@ stan.on('connect', () => {
         process.exit();
     });
 
-    const options = stan
-        .subscriptionOptions()
-        .setManualAckMode(true)
-        .setDeliverAllAvailable()
-        .setDurableName('order-service'); // Used to deliver the missed events after restart/crash
+    new TicketCreatedListener(stan).listen();
 
-    // If queue group added, nats-streaming-server will subscribe to only one client
-    // This will help us to avoid having duplicate copies in DB etc
-    // when multiple clients are listening for the event.
-    const subscription = stan.subscribe('ticket:created', 'order-queue-group', options);
-
-    subscription.on('message', (msg: Message) => {
-        const data = msg.getData();
-
-        if (typeof data === 'string') {
-            console.log(`Received event #${msg.getSequence()}, with data: ${data}`);
-        }
-
-        // Ack that the event is successfully done
-        msg.ack();
-    });
 });
 
 // Close the connection when the terminal is closed/ Or connection issue
