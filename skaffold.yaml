@@ -8,7 +8,7 @@ build:
   local:
     push: false
   artifacts:
-    - image: programmingwithbadri/ticketing-auth
+    - image: programmingwithbadri/ticketing-auth-service
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -19,6 +19,15 @@ build:
             dest: .
     - image: programmingwithbadri/ticketing-tickets-service
       context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          # whenever the file in this pattern changes, scaffold will update the pod
+          - src: 'src/**/*.ts' # if not match, scaffold will rebuild the docker image
+            dest: .
+    - image: programmingwithbadri/ticketing-orders-service
+      context: orders
       docker:
         dockerfile: Dockerfile
       sync:

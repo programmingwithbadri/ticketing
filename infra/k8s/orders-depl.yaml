@@ -1,25 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment # Deployment object which will create the pods for us. Even restarts if pod stops
 metadata:
-  name: auth-depl
+  name: orders-depl
 spec:
   replicas: 1
   selector: # select the pod we need to deploy based on label in the template
     matchLabels:
-      app: auth
+      app: orders
   template: # Pod template
     metadata:
-      labels: 
-        app: auth
+      labels:
+        app: orders
     spec:
       containers:
-        - name: auth
-          image: programmingwithbadri/ticketing-auth-service
+        - name: orders
+          image: programmingwithbadri/ticketing-orders-service
           env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
             - name: MONGO_URI
-              value: 'mongodb://auth-mongo-srv:27017'
+              value: "mongodb://orders-mongo-srv:27017"
             - name: JWT_KEY
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
@@ -28,12 +36,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: orders-srv
 spec: # default type: clusterIP
   selector: # select the pod we need to deploy based on label in the template
-    app: auth
+    app: orders
   ports:
-    - name: auth
+    - name: orders
       protocol: TCP
       port: 3000 # port number of the current service(cluster IP service).
       targetPort: 3000 # port number of our pod(express server port)
