@@ -16,7 +16,8 @@ router.delete(
     async (req: Request, res: Response) => {
         const { orderId } = req.params;
 
-        const order = await Order.findById(orderId);
+        // Populate ticket info so that we can send the ticket id while publishing the event
+        const order = await Order.findById(orderId).populate('ticket'); 
 
         if (!order) {
             throw new NotFoundError();
