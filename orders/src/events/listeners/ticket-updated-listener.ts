@@ -8,7 +8,12 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     queueGroupName = queueGroupName;
 
     async onMessage(data: TicketUpdatedEvent['data'], msg: Message) {
-        const ticket = await Ticket.findById(data.id);
+        const ticket = await Ticket.findOne({
+            _id: data.id,
+            // Ticket is updated in the Tickets service and the version will be incremented by 1.
+            // To find the correct ticket, we need to decrement by 1 in the orders service(Ticket Db)
+            version: data.version - 1
+        })
 
         if (!ticket) {
             throw new Error('Ticket not found');
