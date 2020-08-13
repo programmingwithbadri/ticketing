@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { OrderStatus } from '@dev-ticketing/common';
 import { TicketDoc } from './ticket';
 
@@ -53,6 +54,10 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+
+// Store __v(version key) value in the version field
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order(attrs);
