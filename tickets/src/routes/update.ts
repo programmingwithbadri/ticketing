@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@dev-ticketing/common';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated';
@@ -33,6 +34,10 @@ router.put(
       throw new NotAuthorizedError();
     }
 
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot update the reserved ticket')
+    }
+
     ticket.set({
       title: req.body.title,
       price: req.body.price,
@@ -43,7 +48,7 @@ router.put(
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
-      userId: ticket.userId,      
+      userId: ticket.userId,
       version: ticket.version
     });
 
