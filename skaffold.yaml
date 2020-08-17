@@ -35,6 +35,15 @@ build:
           # whenever the file in this pattern changes, scaffold will update the pod
           - src: 'src/**/*.ts' # if not match, scaffold will rebuild the docker image
             dest: .
+    - image: programmingwithbadri/ticketing-expiration-service
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          # whenever the file in this pattern changes, scaffold will update the pod
+          - src: 'src/**/*.ts' # if not match, scaffold will rebuild the docker image
+            dest: .
     - image: programmingwithbadri/ticketing-client
       context: client
       docker:
