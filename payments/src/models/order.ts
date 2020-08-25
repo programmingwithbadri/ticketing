@@ -7,7 +7,7 @@ import { OrderStatus } from "@dev-ticketing/common";
 interface OrderAttrs {
     id: string;
     status: OrderStatus;
-    version: string;
+    version: number;
     userId: string;
     price: number;
 }
@@ -16,7 +16,7 @@ interface OrderAttrs {
 // that a Order Document has
 interface OrderDoc extends mongoose.Document {
     status: OrderStatus;
-    version: string;
+    version: number;
     userId: string;
     price: number;
 }
