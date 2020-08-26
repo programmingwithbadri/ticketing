@@ -10,6 +10,7 @@ import {
 } from '@dev-ticketing/common';
 import { Order } from '../models/order';
 import { stripe } from '../stripe';
+import { Payment } from '../models/payment';
 
 const router = express.Router();
 
@@ -38,6 +39,13 @@ router.post(
       amount: order.price * 100, // Dollor to cents
       source: token,
     });
+
+    const payment = Payment.build({
+      orderId,
+      stripeId: charge.id,
+    });
+
+    await payment.save();
 
     res.status(201).send();
   }
