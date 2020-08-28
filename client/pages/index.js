@@ -1,5 +1,3 @@
-import buildClient from "../api/build-client";
-
 const LandingPage = ({ currentUser }) => {
   return currentUser ? (
     <h1>You are signed in</h1>
@@ -9,11 +7,9 @@ const LandingPage = ({ currentUser }) => {
 };
 
 // Called by browser - when redirected or called by other components
-// Called during SSR, when page reloads/ direct page rendering from URL call
+// Called during SSR by the parent component(AppComponent)
 LandingPage.getInitialProps = async (context) => {
-  const { data } = await buildClient(context).get("/api/users/currentuser");
-
-  return data;
+  return {}
 };
 
 export default LandingPage;

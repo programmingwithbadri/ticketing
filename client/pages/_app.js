@@ -1,19 +1,19 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import buildClient from '../api/build-client';
-import Header from '../components/header';
+import "bootstrap/dist/css/bootstrap.css";
+import buildClient from "../api/build-client";
+import Header from "../components/header";
 
 const AppComponent = ({ Component, pageProps, currentUser }) => {
   return (
     <div>
       <Header currentUser={currentUser} />
-      <Component {...pageProps} />
+      <Component currentUser={currentUser} {...pageProps} />
     </div>
   );
 };
 
-AppComponent.getInitialProps = async appContext => {
+AppComponent.getInitialProps = async (appContext) => {
   const client = buildClient(appContext.ctx);
-  const { data } = await client.get('/api/users/currentuser');
+  const { data } = await client.get("/api/users/currentuser");
 
   let pageProps = {};
 
@@ -25,7 +25,7 @@ AppComponent.getInitialProps = async appContext => {
   // Pass the props and currentUserData to child component
   return {
     pageProps,
-    ...data
+    ...data,
   };
 };
 
