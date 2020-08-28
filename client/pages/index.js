@@ -8,7 +8,7 @@ const LandingPage = ({ currentUser }) => {
 
 // Called by browser - when redirected or called by other components
 // Called during SSR by the parent component(AppComponent)
-LandingPage.getInitialProps = async (context) => {
+LandingPage.getInitialProps = async (context, client, currentUser) => {
   return {}
 };
 

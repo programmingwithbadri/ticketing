@@ -19,7 +19,11 @@ AppComponent.getInitialProps = async (appContext) => {
 
   // Checks if the child component have any getInitialProps defined
   if (appContext.Component.getInitialProps) {
-    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.currentUser
+    );
   }
 
   // Pass the props and currentUserData to child component
