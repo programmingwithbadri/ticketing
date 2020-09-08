@@ -36,10 +36,23 @@ router.post(
       throw new BadRequestError('Cannot pay for an cancelled order');
     }
 
+    // Shipping address & description is mandate for transactions in India
+    // It is mocked for now.
     const charge = await stripe.charges.create({
       currency: 'usd',
       amount: order.price * 100, // Dollor to cents
       source: token,
+      description: 'Payment made for buying ticket', 
+      shipping: { 
+        name: 'Jenny Rosen',
+        address: {
+          line1: "510 Townsend St",
+          postal_code: "98140",
+          city: "San Francisco",
+          state: "CA",
+          country: "US"
+        }
+      }
     });
 
     const payment = Payment.build({
